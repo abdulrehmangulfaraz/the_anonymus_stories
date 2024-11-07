@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "the_anonymus_stories/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "35mb",
+                "runtime": "python3.12",
+                "maxDuration": 60
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "the_anonymus_stories/wsgi.py"
+        }
+    ]
+}
