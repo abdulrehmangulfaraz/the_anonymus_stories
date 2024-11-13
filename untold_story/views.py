@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import FileResponse, Http404
+from django.http import JsonResponse
 import json
 
 # Create your views here.
@@ -15,7 +16,14 @@ def get(request):
                 raise Http404("Requested file not found.")
         except FileNotFoundError:
             raise Http404("File does not exist.")
-        
+
 def post(request):
     if request.method == 'POST':
-        print(request.body.decode('utf-8'))
+        body = request.body.decode('utf-8')
+        data = json.loads(body)
+
+        # Check if 'username' exists in data and if the body is not empty
+        if 'username' in data and data['username']:
+            return JsonResponse({"status": "success"})
+        else:
+            return JsonResponse({"status": "failed"})
