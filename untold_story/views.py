@@ -26,23 +26,8 @@ def post(request):
             if not body:
                 return JsonResponse({"status": "failed", "message": "Empty body received"}, status=400)
 
-            data = json.loads(body)
+            print(body)
 
-            # Check for the 'data' object with 'username' and 'content'
-            if 'data' in data and 'username' in data['data'] and 'content' in data['data']:
-                username = data['data']['username']
-                content = data['data']['content']
-
-                # Ensure username and content are not empty
-                if username and content:
-                    return JsonResponse({"status": "success"})
-                else:
-                    return JsonResponse({"status": "failed", "message": "Username or content is empty"}, status=400)
-            else:
-                return JsonResponse({"status": "failed", "message": "Missing 'data', 'username', or 'content' fields"}, status=400)
-
-        except json.JSONDecodeError:
-            return JsonResponse({"status": "failed", "message": "Invalid JSON format"}, status=400)
-
+            return JsonResponse({"status": "success"})
         except Exception as e:
             return JsonResponse({"status": "failed", "message": str(e)}, status=500)
