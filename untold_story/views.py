@@ -18,4 +18,4 @@ def get(request):
         
 def post(request):
     if request.method == 'POST':
-        print(json.loads(request.body.decode('utf-8')))
+        print(request.body.decode('utf-8'))
