@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost' ,'127.0.0.1']
 
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'the_anonymus_stories.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': dj_database_url.parse(os.getenv('DATABASE_CONNECTION_STRING'))
+    'default': dj_database_url.parse(os.getenv('DATABASE_CONNECTION_STRING'))
 }
 
 
