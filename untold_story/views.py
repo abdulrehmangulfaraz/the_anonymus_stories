@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import FileResponse, Http404
 from django.http import JsonResponse
+from .models import Data
 import json
 
 # Create your views here.
@@ -27,6 +28,9 @@ def post(request):
                 return JsonResponse({"status": "failed", "message": "Empty body received"}, status=400)
 
             print(body)
+            data = json.loads(body)
+            d = Data.objects.create(username=data.get("username"), data=data.get("data"))
+            d.save()
 
             return JsonResponse({"status": "success"})
         except Exception as e:
