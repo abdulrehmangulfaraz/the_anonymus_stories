@@ -21,6 +21,7 @@ def post(request):
     if request.method == 'POST':
         body = request.body.decode('utf-8')
         data = json.loads(body)
+        print(data)
 
         # Check if 'username' exists in data and if the body is not empty
         if 'username' in data and data['username']:
