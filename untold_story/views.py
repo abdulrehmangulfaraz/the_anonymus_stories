@@ -17,14 +17,32 @@ def get(request):
         except FileNotFoundError:
             raise Http404("File does not exist.")
 
+
 def post(request):
     if request.method == 'POST':
-        body = request.body.decode('utf-8')
-        data = json.loads(body)
-        print(data)
+        try:
+            # Decode and load the JSON data
+            body = request.body.decode('utf-8').strip()
+            if not body:
+                return JsonResponse({"status": "failed", "message": "Empty body received"}, status=400)
 
-        # Check if 'username' exists in data and if the body is not empty
-        if 'username' in data and data['username']:
-            return JsonResponse({"status": "success"})
-        else:
-            return JsonResponse({"status": "failed"})
+            data = json.loads(body)
+
+            # Check for the 'data' object with 'username' and 'content'
+            if 'data' in data and 'username' in data['data'] and 'content' in data['data']:
+                username = data['data']['username']
+                content = data['data']['content']
+
+                # Ensure username and content are not empty
+                if username and content:
+                    return JsonResponse({"status": "success"})
+                else:
+                    return JsonResponse({"status": "failed", "message": "Username or content is empty"}, status=400)
+            else:
+                return JsonResponse({"status": "failed", "message": "Missing 'data', 'username', or 'content' fields"}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "failed", "message": "Invalid JSON format"}, status=400)
+
+        except Exception as e:
+            return JsonResponse({"status": "failed", "message": str(e)}, status=500)
