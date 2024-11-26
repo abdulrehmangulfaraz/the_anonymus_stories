@@ -59,7 +59,8 @@ def post(request):
                 # Perform bulk creation in a single query
                 Data.objects.bulk_create(objects)
 
-            except:
+            except Exception as e:
+                print(e)
                 print(data)
 
             return JsonResponse({"status": "success"})
