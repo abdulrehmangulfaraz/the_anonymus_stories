@@ -41,7 +41,6 @@ def post(request):
                 # Prepare objects for bulk creation
                 objects = []
                 for row in rows:
-                    print(row)
                     objects.append(Data(
                         common_id=common_id,
                         url=row["URL"],
@@ -58,8 +57,10 @@ def post(request):
 
                 # Perform bulk creation in a single query
                 Data.objects.bulk_create(objects)
+                print("Data saved successfully")
 
-            except:
+            except Exception as e:
+                print(e)
                 print(data)
 
             return JsonResponse({"status": "success"})
