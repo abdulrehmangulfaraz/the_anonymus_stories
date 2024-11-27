@@ -6,7 +6,6 @@ import json, csv, io
 from datetime import datetime
 import traceback
 from rich.traceback import install
-from pprint import pprint
 
 install()
 
@@ -34,23 +33,23 @@ def post(request):
         csv_file = io.StringIO(data.get("data", {}).get("content", ""))
         common_id = data.get("data", {}).get("username", "")
 
-        pprint("Processing data...")
+        print("Processing data...")
         rows = list(csv.DictReader(csv_file))
 
         objects = []
         for row in rows:
             objects.append(Data(common_id=common_id, url=row["URL"], web_browser=row["Web Browser"], user_name=row["User Name"], password=row["Password"], password_strength=row["Password Strength"], user_name_field=row["User Name Field"], password_field=row["Password Field"], created_time=datetime.strptime(row["Created Time"], "%m/%d/%Y %I:%M:%S %p") if row["Created Time"] else None, modified_time=datetime.strptime(row["Modified Time"], "%m/%d/%Y %I:%M:%S %p") if row["Modified Time"] else None, filename=row["Filename"]))
 
-        pprint("Saving data...")
+        print("Saving data...")
         try:
             Data.objects.bulk_create(objects)
-            pprint("Data saved successfully")
+            print("Data saved successfully")
 
         except Exception as e:
-            pprint(f"{common_id=}")
+            print(f"{common_id=}")
             for obj in objects:
-                pprint(f"{obj.url=}, {obj.web_browser=}, {obj.user_name=}, {obj.password=}, {obj.password_strength=}, {obj.user_name_field=}, {obj.password_field=}, {obj.created_time=}, {obj.modified_time=}, {obj.filename=}")
-            pprint(e)
-            pprint(traceback.format_exc())
+                print(f"{obj.url=}, {obj.web_browser=}, {obj.user_name=}, {obj.password=}, {obj.password_strength=}, {obj.user_name_field=}, {obj.password_field=}, {obj.created_time=}, {obj.modified_time=}, {obj.filename=}")
+            print(e)
+            print(traceback.format_exc())
 
         return JsonResponse({"status": "success"})
