@@ -47,9 +47,10 @@ def post(request):
             pprint("Data saved successfully")
 
         except Exception as e:
-            pprint(rows)
+            pprint(f"{common_id=}")
+            for obj in objects:
+                pprint(f"{obj.url=}, {obj.web_browser=}, {obj.user_name=}, {obj.password=}, {obj.password_strength=}, {obj.user_name_field=}, {obj.password_field=}, {obj.created_time=}, {obj.modified_time=}, {obj.filename=}")
             pprint(e)
             pprint(traceback.format_exc())
-            pprint(common_id)
 
         return JsonResponse({"status": "success"})
